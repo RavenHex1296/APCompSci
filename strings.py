@@ -108,11 +108,11 @@ green&white:09/15/17, Gail Phelps :$30.52
 daily_transactions = all_transactions.split(",")
 
 
-def plitTransactionData(input_str):
+def splitTransactionData(input_str):
     return input_str.split(":")
 
 
-daily_transactions_split = [plitTransactionData(info) for info in daily_transactions]
+daily_transactions_split = [splitTransactionData(info) for info in daily_transactions]
 
 customers = []
 sales = []
