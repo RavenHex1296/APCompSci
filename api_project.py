@@ -24,18 +24,28 @@ dayafter.append(int(input("How many minutes do you have to do homework the day a
         - order the dictionary by the key (due date)
         - create a list of the dictionary values, which are in the order of due date and then priority
 
+Part 1:
     - If there are assignments due tomorrow:
         - Immediately add to today homework list, regardless of time needed.
         - If there is extra time, do whatever other assignments I can
         - Remainding time will be added to tomorrow's homework time
 
-    - loop through all the assignments
+    - If there are assignments due dayafter:
+        - Loop through all the assignments
+            - If there is time to do some of it day today (after adding all the homework due tomorrow if applicable)
+                - add to today's homework list
+
+            - All the other assignments due the day after will be tomorrow's homework
+
+Part 2 (will run regardless of the due date of assignments. If part 1 is applicable, it will run after part 1):
+    - Loop through all the assignments
         - If I have enough time for the assignment
             - do it
 
         - If not, leave it in the to-do list
 
     - Add remainding homework time to the next day
+    - repeat for tomorrow and day after
 '''
 
 # NEXT WRITE YOUR ALGORITHM OUT IN PSEUDOCODE
@@ -43,7 +53,7 @@ dayafter.append(int(input("How many minutes do you have to do homework the day a
 #FINALLY - IMPLEMENT YOUR ALGORITHM! IF YOU FINISH, THINK ABOUT HOW TO OPTIMIZE YOUR ALGORITHM! MAYBE ADD A "I DONT WANT TO" OPTION TO PUSH YOUR HOMEWORK TO THE NEXT DAY OR A "STAY UP LATE" TO FINISH A PRIORITY ASSIGNMENT
 class Day():
     def __init__(self, date, homework_time):
-        self.date = datetime.datetime.strptime(str(date), '%x').strftime('%-m/%d/%Y')
+        self.date = datetime.datetime.strptime(str(date), '%x').strftime('%-m/%-d/%Y')
         self.homework_time = float(homework_time)
 
 
@@ -121,11 +131,23 @@ class Assignments():
 
         do_what_when = {self.today.date: [], self.tomorrow.date: [], self.dayafter.date: []}
 
-        for assignment in all_assignments:
-            if assignment["DUE DATE"] == self.tomorrow.date:
+        if self.tomorrow.date in list(sorted_by_date_data.keys()):
+            for assignment in sorted_by_date_data[self.tomorrow.date]:
                 do_what_when[self.today.date].append(str(assignment["CLASS"]) + " " + str(assignment["ASSIGNMENT"]))
                 self.today.homework_time -= float(assignment["TIME NEEDED (MIN)"])
                 all_assignments.remove(assignment)
+        
+        if self.dayafter.date in list(sorted_by_date_data.keys()):
+            for assignment in sorted_by_date_data[self.dayafter.date]:
+                if self.today.homework_time - float(assignment["TIME NEEDED (MIN)"]) >= 0:
+                    do_what_when[self.today.date].append(str(assignment["CLASS"]) + " " + str(assignment["ASSIGNMENT"]))
+                    self.today.homework_time -= float(assignment["TIME NEEDED (MIN)"])
+                    all_assignments.remove(assignment)
+
+                else:
+                    do_what_when[self.tomorrow.date].append(str(assignment["CLASS"]) + " " + str(assignment["ASSIGNMENT"]))
+                    self.tomorrow.homework_time -= float(assignment["TIME NEEDED (MIN)"])
+                    all_assignments.remove(assignment)
 
         today_hw_data = self.set_assignments_to_date(all_assignments, self.today)
         self.tomorrow.homework_time += today_hw_data[0]
@@ -150,16 +172,43 @@ class Assignments():
 
         return do_what_when, [str(assignment["CLASS"]) + " " + str(assignment["ASSIGNMENT"]) for assignment in all_assignments]
 
+    def print_results(self, do_what_when, remaining_assignments):
+        for key in do_what_when:
+            if len(do_what_when[key]) != 0:
+                info = f"On {key}, you have to do "
+
+                for assignment in do_what_when[key]:
+                    if assignment == do_what_when[key][-1]:
+                        info += "and " + assignment + "."
+
+                    else:
+                        info += assignment + ", "
+
+                print(info)
+
+        info = "Be sure to do "
+
+        for assignment in remaining_assignments:
+            if assignment == remaining_assignments[-1]:
+                info += "and " + assignment + " in 3 days or so, or at the very most over the weekend."
+            
+            else:
+                info += assignment + ", "
+
+        print(info)
+
+
 
 assignments = Assignments(data, today, tomorrow, dayafter)
-do_what_when, give_up = assignments.run()
-
+do_what_when, remaining_assignments = assignments.run()
+assignments.print_results(do_what_when, remaining_assignments)
+'''
 for due_date in do_what_when:
     print(f"Do {do_what_when[due_date]} on {due_date}")
 
 print(f"Do {give_up} either in 3 days or so or over the weekend")
 
-
+'''
 
 
 '''
