@@ -179,104 +179,35 @@ class Assignments():
 
                 for assignment in do_what_when[key]:
                     if assignment == do_what_when[key][-1]:
-                        info += "and " + assignment + "."
+                        if len(do_what_when[key]) == 1:
+                            info += assignment + "."
+
+                        else:
+                            info += "and " + assignment + "."
 
                     else:
                         info += assignment + ", "
 
                 print(info)
 
-        info = "Be sure to do "
+        if len(remaining_assignments) != 0:
+            info = "Be sure to do "
 
-        for assignment in remaining_assignments:
-            if assignment == remaining_assignments[-1]:
-                info += "and " + assignment + " in 3 days or so, or at the very most over the weekend."
-            
-            else:
-                info += assignment + ", "
+            for assignment in remaining_assignments:
+                if assignment == remaining_assignments[-1]:
+                    if len(remaining_assignments) == 1:
+                        info += assignment + " in 3 days or so, or at the very most over the weekend."
 
-        print(info)
+                    else:
+                        info += "and " + assignment + " in 3 days or so, or at the very most over the weekend."
+                
+                else:
+                    info += assignment + ", "
+
+            print(info)
 
 
 
 assignments = Assignments(data, today, tomorrow, dayafter)
 do_what_when, remaining_assignments = assignments.run()
 assignments.print_results(do_what_when, remaining_assignments)
-'''
-for due_date in do_what_when:
-    print(f"Do {do_what_when[due_date]} on {due_date}")
-
-print(f"Do {give_up} either in 3 days or so or over the weekend")
-
-'''
-
-
-'''
-    def do_tomorrow_stuff(self, sorted_by_date_data, do_what_when):
-        due_tomorrow = sorted_by_date_data[self.tomorrow.date]
-        finished_assignments = []
-
-        for assignment in due_tomorrow:
-            if self.today.homework_time - float(assignment["TIME NEEDED (MIN)"]) >= 0:
-                do_what_when[self.today.date].append(str(assignment["CLASS"]) + " " + str(assignment["ASSIGNMENT"]))
-                self.today.homework_time -= float(assignment["TIME NEEDED (MIN)"])
-                finished_assignments.append(assignment)
-
-        for assignment in finished_assignments:
-            due_tomorrow.remove(assignment)
-
-        if len(due_tomorrow) > 0:
-            if self.today.homework_time + self.tomorrow.homework_time >= self.needed_homework_time(due_tomorrow):
-                self.today.homework_time += self.tomorrow.homework_time
-                self.tomorrow.homework_time = 0
-
-                for assignment in due_tomorrow:
-                    do_what_when[self.today.date].append(str(assignment["CLASS"]) + " " + str(assignment["ASSIGNMENT"]))
-                    finished_assignments.append(assignment)
-                    self.today.homework_time -= float(assignment["TIME NEEDED (MIN)"])
-
-                self.tomorrow.homework_time += self.today.homework_time
-
-            else:
-                accepted_late = []
-
-                for assignment in due_tomorrow:
-                    if assignment["ACCEPTED LATE"] == "TRUE":
-                        accepted_late.append(assignment)
-
-               #for assignment
-
-        return do_what_when
-'''
-
-'''
-        if self.tomorrow.date in list(sorted_by_date_data.keys()):
-            for assignment in sorted_by_date_data[self.tomorrow.date]:
-                self.today.homework_time -= float(assignment["TIME NEEDED (MIN)"])
-                do_what_when[self.today.date].append(str(assignment["CLASS"]) + " " + str(assignment["ASSIGNMENT"]))
-                all_assignments.remove(assignment)
-
-            if self.today.homework_time > 0:
-                if self.dayafter.date in list(sorted_by_date_data.keys()):
-                    for assignment in sorted_by_date_data[self.dayafter.date]:
-                        if self.today.homework_time - float(assignment["TIME NEEDED (MIN)"]) > 0:
-                            self.today.homework_time -= float(assignment["TIME NEEDED (MIN)"])
-                            do_what_when[self.today.date].append(str(assignment["CLASS"]) + " " + str(assignment["ASSIGNMENT"]))
-                            all_assignments.remove(assignment)
-
-                        else:
-                            self.tomorrow.homework_time += self.today.homework_time
-
-                            for assignment in sorted_by_date_data[self.dayafter.date]:
-                                self.tomorrow.homework_time -= float(assignment["TIME NEEDED (MIN)"])
-                                do_what_when[self.tomorrow.date].append(str(assignment["CLASS"]) + " " + str(assignment["ASSIGNMENT"]))
-                                all_assignments.remove(assignment)
-
-                else:
-                    for assignment in all_assignments:
-                        if self.today.homework_time - float(assignment["TIME NEEDED (MIN)"]) > 0:
-                            self.today.homework_time -= float(assignment["TIME NEEDED (MIN)"])
-                            do_what_when[self.today.date].append(str(assignment["CLASS"]) + " " + str(assignment["ASSIGNMENT"]))
-                            all_assignments.remove(assignment)
-                
-'''
