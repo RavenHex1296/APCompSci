@@ -186,7 +186,11 @@ class Assignments():
                             info += "and " + assignment + "."
 
                     else:
-                        info += assignment + ", "
+                        if len(do_what_when[key]) == 2:
+                            info += assignment + " "
+                        
+                        else:
+                            info += assignment + ", "
 
                 print(info)
 
@@ -202,7 +206,11 @@ class Assignments():
                         info += "and " + assignment + " in 3 days or so, or at the very most over the weekend."
                 
                 else:
-                    info += assignment + ", "
+                    if len(remaining_assignments) == 2:
+                        info += assignment + " "
+
+                    else:
+                        info += assignment + ", "
 
             print(info)
 
